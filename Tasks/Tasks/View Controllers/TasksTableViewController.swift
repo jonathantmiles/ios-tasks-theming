@@ -11,6 +11,10 @@ import CoreData
 
 class TasksTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     
+    override func viewWillAppear(_ animated: Bool) {
+        updateViews()
+    }
+    
     @IBAction func refresh(_ sender: Any) {
         taskController.fetchTasksFromServer { _ in
             DispatchQueue.main.async {
@@ -18,6 +22,12 @@ class TasksTableViewController: UITableViewController, NSFetchedResultsControlle
             }
         }
     }
+    
+    private func updateViews() {
+        self.view.backgroundColor = Appearance.sageGreen
+    
+    }
+    
     
     // MARK: - Table view data source
     
@@ -35,8 +45,22 @@ class TasksTableViewController: UITableViewController, NSFetchedResultsControlle
         let task = fetchedResultsController.object(at: indexPath)
         cell.textLabel?.text = task.name
         
+        style(cell: cell)
+        
         return cell
     }
+    
+    private func style(cell: UITableViewCell) {
+        cell.textLabel?.font = Appearance.applicationFont(with: .caption1, pointSize: 30)
+    }
+    
+//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
+//        headerView.backgroundColor = Appearance.crimsonBackground
+//        
+//        
+//        return headerView
+//    }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard let sectionInfo = fetchedResultsController.sections?[section] else { return nil }
